@@ -22,9 +22,9 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
 
     try {
       const res = await hianime.search(query, page);
-      reply.status(200).send(res);
-    } catch (err) {
-      reply.status(500).send({ message: 'Something went wrong. Please try again later.' });
+      return reply.status(200).send(res);
+    } catch (err: any) {
+      return reply.status(500).send({ message: err.message || 'Something went wrong' });
     }
   });
 
@@ -34,12 +34,10 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
     if (!id) return reply.status(400).send({ message: 'id is required' });
 
     try {
-      const res = await hianime
-        .fetchAnimeInfo(id)
-        .catch((err: any) => reply.status(404).send({ message: err }));
-      reply.status(200).send(res);
-    } catch (err) {
-      reply.status(500).send({ message: 'Something went wrong. Please try again later.' });
+      const res = await hianime.fetchAnimeInfo(id);
+      return reply.status(200).send(res);
+    } catch (err: any) {
+      return reply.status(404).send({ message: err.message || 'Not found' });
     }
   });
 
@@ -56,12 +54,10 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
 
     try {
       const subOrDub = category.toUpperCase() as SubOrSub;
-      const res = await hianime
-        .fetchEpisodeSources(episodeId, server, subOrDub)
-        .catch((err: any) => reply.status(404).send({ message: err }));
-      reply.status(200).send(res);
-    } catch (err) {
-      reply.status(500).send({ message: 'Something went wrong. Please try again later.' });
+      const res = await hianime.fetchEpisodeSources(episodeId, server, subOrDub);
+      return reply.status(200).send(res);
+    } catch (err: any) {
+      return reply.status(500).send({ message: err.message || 'Something went wrong' });
     }
   });
 
@@ -72,9 +68,9 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
       const info = await hianime.fetchAnimeInfo(id);
       const episodes = (info as any).episodes || [];
       const totalEpisodes = (info as any).totalEpisodes || episodes.length;
-      reply.status(200).send({ totalEpisodes, episodes });
-    } catch (err) {
-      reply.status(500).send({ message: 'Something went wrong. Please try again later.' });
+      return reply.status(200).send({ totalEpisodes, episodes });
+    } catch (err: any) {
+      return reply.status(500).send({ message: err.message || 'Something went wrong' });
     }
   });
 };
