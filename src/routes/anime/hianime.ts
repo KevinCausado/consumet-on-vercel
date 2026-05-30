@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply, FastifyInstance, RegisterOptions } from 'fastify';
 import { ANIME } from '@consumet/extensions';
-import { StreamingServers } from '@consumet/extensions/dist/models';
+import { StreamingServers, SubOrSub } from '@consumet/extensions/dist/models';
 
 const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
-  const hianime = new ANIME.HiAnime();
+  const hianime = new ANIME.Hianime();
 
   fastify.get('/', (_, rp) => {
     rp.status(200).send({
@@ -55,8 +55,9 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
     }
 
     try {
+      const subOrDub = category.toUpperCase() as SubOrSub;
       const res = await hianime
-        .fetchEpisodeSources(episodeId, server)
+        .fetchEpisodeSources(episodeId, server, subOrDub)
         .catch((err: any) => reply.status(404).send({ message: err }));
       reply.status(200).send(res);
     } catch (err) {
