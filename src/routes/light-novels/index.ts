@@ -23,7 +23,7 @@ const routes = async (fastify: FastifyInstance, options: RegisterOptions) => {
 
       if (queries.page! < 1) queries.page = 1;
 
-      const provider = PROVIDERS_LIST.LIGHT_NOVELS.find(
+      const provider = (PROVIDERS_LIST.LIGHT_NOVELS as any[]).find(
         (provider: any) => provider.toString.name === queries.lightNovelProvider,
       );
 
