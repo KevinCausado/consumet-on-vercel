@@ -37,22 +37,9 @@ RUN npm install && npm update && npm cache clean --force
 # copy all sources in the container (exclusions in .dockerignore file)
 COPY --chown=nodejs:nodejs . .
 
-# build/pack binaries from sources
+# build TypeScript to dist/
+RUN npm run build
 
-# This results in a single layer image
-# FROM node:lts-alpine AS release
-# COPY --from=builder /dist /dist
-
-# exposed port/s
 EXPOSE 3000
 
-# add an healthcheck, useful
-# healthcheck with curl, but not recommended
-# HEALTHCHECK CMD curl --fail http://localhost:3000/health || exit 1
-# healthcheck by calling the additional script exposed by the plugin
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s CMD npm run healthcheck-manual
-
-# ENTRYPOINT [ "node" ]
-CMD [ "npm", "start" ]
-
-# end.
+CMD [ "node", "dist/main.js" ]
